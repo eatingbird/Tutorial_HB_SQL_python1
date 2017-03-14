@@ -38,22 +38,63 @@ def make_new_student(first_name, last_name, github):
     Given a first name, last name, and GitHub account, add student to the
     database and print a confirmation message.
     """
-    pass
+
+    QUERY = """
+            INSERT INTO students
+              VALUES (:first_name, :last_name, :github)
+            """
+
+    db.session.execute(QUERY, {'first_name': first_name,
+                               'last_name': last_name,
+                               'github': github})
+
+    db.session.commit()
+
+    print "Successfully added student: %s %s" % (first_name,
+                                                 last_name)
 
 
 def get_project_by_title(title):
     """Given a project title, print information about the project."""
-    pass
+
+    QUERY = """
+        SELECT title, description, max_grade
+        FROM projects
+        WHERE title = :title
+        """
+    db_cursor = db.session.execute(QUERY, {'title': title})
+    row = db_cursor.fetchone()
+    print "Project: %s \nDescription: %s\nMax_grade: %s" % (row[0], row[1], row[2])
 
 
 def get_grade_by_github_title(github, title):
     """Print grade student received for a project."""
-    pass
+
+    QUERY = """
+        SELECT grade
+        FROM grades
+        WHERE student_github = :github AND project_title = :title
+        """
+    db_cursor = db.session.execute(QUERY, {'title': title, 'github': github})
+    row = db_cursor.fetchone()
+    print "Grade for %s's project %s is %s" % (github, title, row[0])
 
 
 def assign_grade(github, title, grade):
     """Assign a student a grade on an assignment and print a confirmation."""
-    pass
+
+    QUERY = """
+            INSERT INTO grades
+              VALUES (:student_github, :project_title, :grade)
+            """
+
+    db.session.execute(QUERY, {'github': student_github,
+                               'title': project_title,
+                               'grade': grade})
+
+    db.session.commit()
+
+    print "Github, titile, grade: %s %s %s" % (github, title, grade)
 
 
 def handle_input():
