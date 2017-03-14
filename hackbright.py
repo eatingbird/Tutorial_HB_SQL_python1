@@ -84,12 +84,12 @@ def assign_grade(github, title, grade):
     """Assign a student a grade on an assignment and print a confirmation."""
 
     QUERY = """
-            INSERT INTO grades
-              VALUES (:student_github, :project_title, :grade)
+            INSERT INTO student_github, project_title, grade
+              VALUES (:github, :title, :grade)
             """
 
-    db.session.execute(QUERY, {'github': student_github,
-                               'title': project_title,
+    db.session.execute(QUERY, {'github': github,
+                               'title': title,
                                'grade': grade})
 
     db.session.commit()
